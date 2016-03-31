@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
 	spec.authors       = ["Samuel Williams"]
 	spec.email         = ["samuel.williams@oriontransfer.co.nz"]
 
-	spec.summary       = %q{A simple event-generating Markdown parser.}
+	spec.summary       = %q{A markdown parser and literate programming code generator.}
 	spec.homepage      = "https://github.com/ioquatix/trenni-markdown"
 
 	spec.files         = `git ls-files`.split($/)
