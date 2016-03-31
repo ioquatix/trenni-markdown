@@ -8,9 +8,15 @@ Trenni::Markdown is a light-weight (deliberately) simple Markdown parser. It doe
 
 ## Motivation
 
-I've been working with [ffi-clang](https://github.com/) to generate documentation for C++ code and I was thinking about what would be the ideal documentation. In most cases, I end up copying examples from the unit tests into the main README. What about if the unit tests were actual markdown which could be compiled, and used to document the code in a very tangible way?
+I've been writing a bit of C++ code lately and been thinking about how to document it in a way that is actually practically useful. Initially I started working on [ffi-clang](https://github.com/) to extract comments and symbols from C++ code. But, I found this ultimately produced unsatisfying output.
 
-This markdown parser/generator is an experiment to find out if that's a good idea or not. So, far, the results are interesting.
+I discussed this with a friend and reviewed what I thought was good documentation. I found I tended to prefer short tangible examples, high-level use-cases that demonstrate the functionality of the library in a practical sense. He mentioned literate programming.
+
+I started thinking about what would be the ideal documentation. In most cases, I end up copying examples from the unit tests into the main README. This is a bit tedious but I feel it gives a good high level summary of how and why you would use a library. 
+
+I stated thinking, rather than extracting the code, what about if the README could BE code. What about if the unit tests were actual markdown which could be compiled, and used to document the code in a very tangible way?
+
+The name of this gem is a bit misleading but essentially what it does is generate code from an input markdown document according to some generator implemented in Ruby. The idea is that you could write unit tests (there is an included proof of concept for RSpec) as a readable markdown document. This would serve as the basis for the documentation and tie into the automatically generated documentation which is often hard to get a handle on in large projects. It would be the tangible entry point for high-level functionality, while the underlying symbol/comment index would be the foundation.
 
 ## Installation
 
