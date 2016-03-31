@@ -75,5 +75,13 @@ module Trenni::Markdown::ParserSpec
 				[:text, "foo bar baz bob"],
 			]
 		end
+		
+		it "should parse a code block" do
+			delegate = parse("\tfoo = 10\n\tbar = foo * 2\n")
+			
+			expect(delegate.events).to be == [
+				[:code, ["foo = 10", "bar = foo * 2"]]
+			]
+		end
 	end
 end

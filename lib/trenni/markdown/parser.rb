@@ -36,6 +36,7 @@ module Trenni
 
 					scan_heading
 					scan_paragraph
+					scan_code
 
 					raise_if_stuck(start_pos)
 				end
@@ -51,8 +52,22 @@ module Trenni
 			end
 			
 			def scan_paragraph
-				if self.scan(/\s*(([^\s].*?\n)+)(\n\n|$)/)
+				if self.scan(/\n*(([^\s].*?\n)+)(\n\n|$)/)
 					@delegate.text(self[1].gsub("\n", ' ').strip)
+				end
+			end
+			
+			CODE_LINE = /\t(.*?)\n/
+			
+			def scan_code
+				if self.scan(CODE_LINE)
+					lines = [self[1]]
+					
+					while self.scan(CODE_LINE)
+						lines << self[1]
+					end
+					
+					@delegate.code(lines)
 				end
 			end
 		end
