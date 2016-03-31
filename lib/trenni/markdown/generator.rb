@@ -26,6 +26,7 @@ module Trenni
 				@comment_prefix = comment_prefix
 				@stack = []
 				
+				@whitespace = String.new
 				@output = String.new
 			end
 			
@@ -35,7 +36,16 @@ module Trenni
 				"\t" * @stack.size
 			end
 			
-			def append(lines, prefix = nil)
+			def append_whitespace
+				unless @whitespace.empty?
+					@output << @whitespace
+					@whitespace = String.new
+				end
+			end
+			
+			def append(lines, prefix = nil, ignore_whitespace: false)
+				append_whitespace unless ignore_whitespace
+				
 				if prefix
 					prefix = indentation + prefix
 				else
@@ -50,8 +60,10 @@ module Trenni
 			def outdent(level)
 				# Outdent until we can indent one level:
 				while level <= @stack.size
-					append(@stack.pop)
+					append(@stack.pop, ignore_whitespace: true)
 				end
+				
+				append_whitespace
 			end
 			
 			def begin_parse(parser)
@@ -78,7 +90,7 @@ module Trenni
 			end
 			
 			def whitespace(text)
-				@output << text
+				@whitespace << text
 			end
 			
 			def heading(level, text)
