@@ -1,0 +1,21 @@
+#!/usr/bin/env Ruby
+
+require 'trenni/markdown'
+require 'trenni/markdown/generators'
+
+require 'trollop'
+
+OPTIONS = Trollop::options do
+	opt :generator, "Which generator to use for converting markdown.", :type => :string, :default => 'Ruby'
+end
+
+generator_class = Trenni::Markdown::Generators.const_get(OPTIONS[:generator])
+
+ARGV.each do |path|
+	buffer = Trenni::FileBuffer.new(path)
+	generator = generator_class.new
+	
+	Trenni::Markdown::Parser.new(buffer, generator).parse!
+	
+	puts generator.output
+end

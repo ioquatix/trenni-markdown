@@ -28,36 +28,65 @@ module Trenni
 				super(buffer)
 				
 				@delegate = delegate
+				@level = 0
 			end
 
 			def parse!
+				@delegate.begin_parse(self)
+				
 				until eos?
 					start_pos = self.pos
 
 					scan_heading
 					scan_paragraph
 					scan_code
+					scan_newlines
 
 					raise_if_stuck(start_pos)
 				end
+				
+				@delegate.end_parse(self)
 			end
 
 			protected
 
+			def scan_newlines
+				# Consume all newlines.
+				if self.scan(/\n*/)
+					@delegate.whitespace(self.matched)
+				end
+			end
+
 			def scan_heading
 				# Match any character data except the open tag character.
-				if self.scan(/\s*(\#+)\s*(.*?)$/)
-					@delegate.heading(self[1].length, self[2])
+				if self.scan(/\s*(\#+)\s*(.*?)\n/)
+					level = self[1].length
+					
+					unless level <= (@level + 1)
+						parse_error!("Cannot nest heading more than one level deep at a time!")
+					else
+						@level = level
+					end
+					
+					@delegate.heading(level, self[2])
 				end
 			end
+			
+			PARAGRAPH_LINE = /([^\s#].*?\n)/
 			
 			def scan_paragraph
-				if self.scan(/\n*(([^\s].*?\n)+)(\n\n|$)/)
-					@delegate.text(self[1].gsub("\n", ' ').strip)
+				if self.scan(PARAGRAPH_LINE)
+					lines = [self[1]]
+					
+					while self.scan(PARAGRAPH_LINE)
+						lines << self[1]
+					end
+					
+					@delegate.paragraph(lines)
 				end
 			end
 			
-			CODE_LINE = /\t(.*?)\n/
+			CODE_LINE = /\t(.*?\n)/
 			
 			def scan_code
 				if self.scan(CODE_LINE)

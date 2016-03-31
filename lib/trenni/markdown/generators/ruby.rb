@@ -18,6 +18,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require_relative "markdown/version"
-require_relative "markdown/parser"
-require_relative "markdown/generator"
+module Trenni
+	module Markdown
+		module Generators
+			class Ruby < Generator
+				def heading(level, text)
+					nest(level, "#{text}\n", "end\n")
+				end
+			end
+		end
+	end
+end

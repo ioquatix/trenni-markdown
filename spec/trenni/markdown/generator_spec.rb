@@ -1,3 +1,5 @@
+#!/usr/bin/env rspec
+
 # Copyright, 2016, by Samuel G. D. Williams. <http://www.codeotaku.com>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,6 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require_relative "markdown/version"
-require_relative "markdown/parser"
-require_relative "markdown/generator"
+require 'trenni/markdown'
+
+module Trenni::Markdown::GeneratorSpec
+	RSpec.describe Trenni::Markdown::Generator do
+		def parse(input)
+			buffer = Trenni::Buffer.new(input)
+			
+			Trenni::Markdown::Parser.new(buffer, subject).parse!
+			
+			return subject
+		end
+		
+		it "should parse a heading" do
+			generator = parse(<<~EOS)
+			# MyModule
+			
+			This constant has a value.
+				CONSTANT = value
+			EOS
+			
+			puts generator.output
+		end
+	end
+end

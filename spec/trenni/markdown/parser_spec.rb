@@ -30,12 +30,17 @@ module Trenni::Markdown::ParserSpec
 		
 		attr :events
 		
-		def method_missing(*args)
-			@events << args
+		def begin_parse(parser)
 		end
 		
-		def begin_parse(scanner)
-			# ignore this event
+		def end_parse(parser)
+		end
+		
+		def whitespace(text)
+		end
+		
+		def method_missing(*args)
+			@events << args
 		end
 	end
 
@@ -50,7 +55,7 @@ module Trenni::Markdown::ParserSpec
 		end
 		
 		it "should parse a heading" do
-			delegate = parse("# Heading 1\n## Heading 2")
+			delegate = parse("# Heading 1\n## Heading 2\n")
 			
 			expect(delegate.events).to be == [
 				[:heading, 1, "Heading 1"],
@@ -63,7 +68,7 @@ module Trenni::Markdown::ParserSpec
 			
 			expect(delegate.events).to be == [
 				[:heading, 1, "Heading 1"],
-				[:text, "paragraph"],
+				[:paragraph, ["paragraph\n"]],
 			]
 		end
 		
@@ -72,7 +77,7 @@ module Trenni::Markdown::ParserSpec
 			
 			expect(delegate.events).to be == [
 				[:heading, 1, "Heading 1"],
-				[:text, "foo bar baz bob"],
+				[:paragraph, ["foo bar\n", "baz bob\n"]],
 			]
 		end
 		
@@ -80,7 +85,7 @@ module Trenni::Markdown::ParserSpec
 			delegate = parse("\tfoo = 10\n\tbar = foo * 2\n")
 			
 			expect(delegate.events).to be == [
-				[:code, ["foo = 10", "bar = foo * 2"]]
+				[:code, ["foo = 10\n", "bar = foo * 2\n"]]
 			]
 		end
 	end

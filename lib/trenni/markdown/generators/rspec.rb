@@ -18,6 +18,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require_relative "markdown/version"
-require_relative "markdown/parser"
-require_relative "markdown/generator"
+module Trenni
+	module Markdown
+		module Generators
+			class RSpec < Generator
+				def heading(level, text)
+					case level
+						when 1 then nest(level, "RSpec.describe #{text} do\n", "end\n")
+						when 2 then nest(level, "it #{text.dump} do", "end\n")
+					end
+				end
+			end
+		end
+	end
+end

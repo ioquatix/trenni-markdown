@@ -8,7 +8,7 @@ Trenni::Markdown is a light-weight (deliberately) simple Markdown parser. It doe
 
 ## Motivation
 
-I've been working with ffi-clang to generate documentation for C++ code and I was thinking about what would be the ideal documentation. In most cases, I end up copying examples from the unit tests into the main README. What about if the unit tests were actual markdown which could be compiled, and used to document the code in a very tangible way?
+I've been working with [ffi-clang](https://github.com/) to generate documentation for C++ code and I was thinking about what would be the ideal documentation. In most cases, I end up copying examples from the unit tests into the main README. What about if the unit tests were actual markdown which could be compiled, and used to document the code in a very tangible way?
 
 ## Installation
 
@@ -26,7 +26,15 @@ Or install it yourself as:
 
 ## Usage
 
+	input = "# Title\nParagraph\n"
+	buffer = Trenni::Buffer.new(input)
+	Trenni::Markdown::Parser.new(buffer, delegate).parse!
 
+The delegate must respond to the following callbacks:
+
+	@delegate.heading(level, text)
+	@delegate.paragraph(text)
+	@delegate.code(lines)
 
 ## Contributing
 
