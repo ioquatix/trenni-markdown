@@ -68,7 +68,13 @@ module Trenni
 						@level = level
 					end
 					
-					@delegate.heading(level, self[2])
+					text = self[2]
+					
+					# If the title has a inline code fence, e.g. "# Testing `String`"
+					# we only pass along the part in the code fence.
+					text = $1 if text =~ /`(.*?)`/
+					
+					@delegate.heading(level, text)
 				end
 			end
 			
