@@ -4,11 +4,13 @@ Trenni::Markdown is a light-weight (deliberately) simple Markdown parser. It doe
 
 [![Build Status](https://secure.travis-ci.org/ioquatix/trenni-markdown.svg)](http://travis-ci.org/ioquatix/trenni-markdown)
 [![Code Climate](https://codeclimate.com/github/ioquatix/trenni-markdown.svg)](https://codeclimate.com/github/ioquatix/trenni-markdown)
-[![Coverage Status](https://coveralls.io/repos/ioquatix/trenni/trenni-markdown.svg)](https://coveralls.io/r/ioquatix/trenni-markdown)
+[![Coverage Status](https://coveralls.io/repos/ioquatix/trenni-markdown/badge.svg)](https://coveralls.io/r/ioquatix/trenni-markdown)
 
 ## Motivation
 
 I've been working with [ffi-clang](https://github.com/) to generate documentation for C++ code and I was thinking about what would be the ideal documentation. In most cases, I end up copying examples from the unit tests into the main README. What about if the unit tests were actual markdown which could be compiled, and used to document the code in a very tangible way?
+
+This markdown parser/generator is an experiment to find out if that's a good idea or not. So, far, the results are interesting.
 
 ## Installation
 
@@ -26,6 +28,39 @@ Or install it yourself as:
 
 ## Usage
 
+### Command line
+
+A command line binary is included for basic transforms:
+
+	$ trenni-markdown -g RSpec examples/test.md
+	RSpec.describe String.new("Test") do
+
+		# This test checks that strings report the inclusion of letters correctly.
+
+		it "should contain the letter e" do
+			expect(subject).to include('e')
+		end
+
+		it "shoudn't contain the letter m" do
+			expect(subject).to_not include('m')
+		end
+	end
+
+### Generator
+
+The command line is essentially implemented as follows:
+
+	buffer = Trenni::FileBuffer.new(path)
+	generator = Trenni::Markdown::Generators::RSpec.new
+
+	Trenni::Markdown::Parser.new(buffer, generator).parse!
+
+	puts generator.output
+
+### Parser
+
+If you just want to parse the subset of markdown supported by `Trenni::Markdown`, you can do so:
+
 	input = "# Title\nParagraph\n"
 	buffer = Trenni::Buffer.new(input)
 	Trenni::Markdown::Parser.new(buffer, delegate).parse!
@@ -35,6 +70,8 @@ The delegate must respond to the following callbacks:
 	@delegate.heading(level, text)
 	@delegate.paragraph(text)
 	@delegate.code(lines)
+
+Keep in mind that this is not a general purpose markdown parser, but specifically for the generation of literate programming code.
 
 ## Contributing
 

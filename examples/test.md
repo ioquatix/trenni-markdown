@@ -1,4 +1,4 @@
-# String.new("Test")
+# Describe `String.new("Test")`
 
 This test checks that strings report the inclusion of letters correctly.
 
