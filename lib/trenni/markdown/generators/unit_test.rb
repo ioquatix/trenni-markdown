@@ -20,6 +20,50 @@
 
 module Trenni
 	module Markdown
-		VERSION = "0.2.0"
+		module Generators
+			class UnitTest < Generator
+				def initialize
+					super('// ')
+				end
+				
+				def namespace(level, name)
+					# C++17 might help us avoid this mess :(
+					parts = name.split(/::/)
+					parts.collect!{|part| "namespace #{part} {"}
+					
+					nest(level, 
+						parts.join(' ') + "\n", 
+						'}' * parts.count + "\n"
+					)
+				end
+				
+				def suite(level, name)
+					nest(level,
+						"Unit::Test #{name.gsub(/\s/, '')}Suite = {\n",
+						"};\n"
+					)
+				end
+				
+				def test(level, name)
+					nest(level,
+						"{\"#{name}\",\n",
+						"},\n"
+					)
+					
+					nest(level+1,
+						"[](UnitTest::Examiner & examiner) {",
+						"}\n"
+					)
+				end
+				
+				def heading(level, text)
+					case level
+					when 1 then namespace(level, text)
+					when 2 then suite(level, text)
+					when 3 then test(level, text)
+					end
+				end
+			end
+		end
 	end
 end

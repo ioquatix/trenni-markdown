@@ -59,7 +59,7 @@ module Trenni
 
 			def scan_heading
 				# Match any character data except the open tag character.
-				if self.scan(/\s*(\#+)\s*(.*?)\n/)
+				if self.scan(/\n*(\#+)\s*(.*?)\n/)
 					level = self[1].length
 					
 					unless level <= (@level + 1)
