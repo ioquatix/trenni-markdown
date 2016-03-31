@@ -30,7 +30,7 @@ Or install it yourself as:
 
 ### Command line
 
-A command line binary is included for basic transforms:
+A command line binary is included for basic transforms (using [examples/test.md](examples/test.md) in this example):
 
 	$ trenni-markdown -g RSpec examples/test.md
 	RSpec.describe String.new("Test") do
@@ -71,7 +71,7 @@ The delegate must respond to the following callbacks:
 	@delegate.paragraph(text)
 	@delegate.code(lines)
 
-Keep in mind that this is not a general purpose markdown parser, but specifically for the generation of literate programming code.
+Keep in mind that this is not a general purpose markdown parser, but specifically for the generation of literate code.
 
 ## Contributing
 
