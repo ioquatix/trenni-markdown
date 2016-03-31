@@ -25,7 +25,7 @@ module Trenni
 				def heading(level, text)
 					case level
 						when 1 then nest(level, "RSpec.describe #{text} do\n", "end\n")
-						when 2 then nest(level, "it #{text.dump} do", "end\n")
+						when 2 then nest(level, "it #{text.downcase.dump} do", "end\n")
 					end
 				end
 			end
