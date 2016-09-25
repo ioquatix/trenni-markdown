@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 	spec.require_paths = ["lib"]
 
 	spec.add_dependency "trenni", "~> 1.6.0"
-  spec.add_dependency "trollop", "~> 2.0.0"
+	spec.add_dependency "samovar", "~> 1.2.0"
 
 	spec.add_development_dependency "bundler", "~> 1.11"
 	spec.add_development_dependency "rake", "~> 10.0"
