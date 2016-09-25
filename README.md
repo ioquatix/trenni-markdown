@@ -1,6 +1,6 @@
 # Trenni::Markdown
 
-Trenni::Markdown is a light-weight (deliberately) simple Markdown parser. It doesn't cover the entire spec but only a small subset required for implementing [literate](https://en.wikipedia.org/wiki/Literate_programming) unit tests, which are markdown documents which include unit tests.
+Trenni::Markdown is a deliberately light-weight and simple Markdown parser. It doesn't cover the entire spec but only a small subset required for implementing [literate](https://en.wikipedia.org/wiki/Literate_programming) unit tests, which are markdown documents which include unit tests.
 
 [![Build Status](https://secure.travis-ci.org/ioquatix/trenni-markdown.svg)](http://travis-ci.org/ioquatix/trenni-markdown)
 [![Code Climate](https://codeclimate.com/github/ioquatix/trenni-markdown.svg)](https://codeclimate.com/github/ioquatix/trenni-markdown)
@@ -38,7 +38,7 @@ Or install it yourself as:
 
 A command line binary is included for basic transforms (using [examples/test.md](examples/test.md) in this example):
 
-	$ trenni-markdown -g RSpec examples/test.md
+	$ trenni-markdown generate -g RSpec examples/test.md
 	RSpec.describe String.new("Test") do
 
 		# This test checks that strings report the inclusion of letters correctly.
