@@ -30,33 +30,33 @@ module Trenni
 				@delegate = delegate
 				@level = 0
 			end
-
+			
 			def parse!
 				@delegate.begin_parse(self)
 				
 				until eos?
 					start_pos = self.pos
-
+					
 					scan_heading
 					scan_paragraph
 					scan_code
 					scan_newlines
-
+					
 					raise_if_stuck(start_pos)
 				end
 				
 				@delegate.end_parse(self)
 			end
-
+			
 			protected
-
+			
 			def scan_newlines
 				# Consume all newlines.
 				if self.scan(/\n*/)
 					@delegate.whitespace(self.matched)
 				end
 			end
-
+			
 			def scan_heading
 				# Match any character data except the open tag character.
 				if self.scan(/\n*(\#+)\s*(.*?)\n/)
@@ -78,7 +78,7 @@ module Trenni
 				end
 			end
 			
-			PARAGRAPH_LINE = /([^\s#].*?\n)/
+			PARAGRAPH_LINE = /([^\s#].*?\Z)/
 			
 			def scan_paragraph
 				if self.scan(PARAGRAPH_LINE)
@@ -92,7 +92,9 @@ module Trenni
 				end
 			end
 			
-			CODE_LINE = /\t(.*?\n)/
+			CODE_LINE = /\t(.*?\n\Z)/
+			CODE_BLOCK_START = /(~~~~*)(?<meta>.*?)\Z/
+			CODE_BLOCK_END = /(~~~~*)\Z/
 			
 			def scan_code
 				if self.scan(CODE_LINE)
@@ -103,6 +105,8 @@ module Trenni
 					end
 					
 					@delegate.code(lines)
+				elsif self.scan(CODE_BLOCK_START)
+					
 				end
 			end
 		end

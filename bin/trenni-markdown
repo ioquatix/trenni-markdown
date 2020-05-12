@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Copyright, 2012, by Samuel G. D. Williams. <http://www.codeotaku.com>
+# Copyright, 2020, by Samuel G. D. Williams. <http://www.codeotaku.com>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'trenni/markdown/command'
+require_relative '../lib/trenni/markdown/command'
+require 'console'
 
-top = Trenni::Markdown::Command::Top.parse(ARGV)
-
-top.invoke
+begin
+	Trenni::Markdown::Command::Top.call
+rescue => error
+	Console.logger.error(Trenni::Markdown::Command) {error}
+	exit 1
+end

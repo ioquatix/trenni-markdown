@@ -18,52 +18,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require_relative '../markdown'
-require_relative 'generators'
-
-require 'samovar'
-
 module Trenni
 	module Markdown
-		module Command
-			class Generate < Samovar::Command
-				options do
-					option "-g/--generator <name>", "The class to use for the conversion process.", default: 'Ruby'
-				end
-				
-				many :paths, "The paths to convert."
-				
-				def generator_class
-					Trenni::Markdown::Generators.const_get(@options[:generator])
-				end
-				
-				def call
-					@paths.each do |path|
-						buffer = Trenni::FileBuffer.new(path)
-						generator = generator_class.new
-						
-						Trenni::Markdown::Parser.new(buffer, generator).parse!
-						
-						puts generator.output
-					end
-
-				end
-			end
-			
-			class Top < Samovar::Command
-				self.description = "Convert markdown into other formats."
-				
-				nested :command, {
-					'generate' => Generate
-				}
-				
-				def call
-					if @command
-						@command.call
-					else
-						print_usage
-					end
-				end
+		module Generators
+			class Markup < Generator
 			end
 		end
 	end
