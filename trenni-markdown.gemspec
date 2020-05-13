@@ -17,10 +17,10 @@ Gem::Specification.new do |spec|
 	spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
 	spec.require_paths = ["lib"]
 
-	spec.add_dependency "trenni", "~> 1.6.0"
-	spec.add_dependency "samovar", "~> 1.2.0"
+	spec.add_dependency "trenni"
+	spec.add_dependency "samovar"
 
 	spec.add_development_dependency "bundler"
-	spec.add_development_dependency "rake", "~> 10.0"
-	spec.add_development_dependency "rspec", "~> 3.0"
+	spec.add_development_dependency "rake"
+	spec.add_development_dependency "rspec"
 end

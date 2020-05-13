@@ -21,9 +21,31 @@
 module Trenni
 	module Markdown
 		module Generators
-			class Ruby < Generator
+			class Markup
+				def begin_parse(parser)
+				end
+				
+				def end_parse(parser)
+				end
+				
+				def whitespace(text)
+					puts "whitespace #{text.inspect}"
+				end
+				
 				def heading(level, text)
-					nest(level, "#{text}\n", "end\n")
+					puts "heading #{level} #{text.inspect}"
+				end
+				
+				def paragraph(text)
+					puts "paragraph #{text.inspect}"
+				end
+				
+				def code(text)
+					puts "code #{text.inspect}"
+				end
+				
+				def markup(text)
+					puts "markup #{text.inspect}"
 				end
 			end
 		end

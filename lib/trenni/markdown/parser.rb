@@ -18,12 +18,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'trenni/scanner'
+require_relative 'scanner'
 
 module Trenni
 	module Markdown
 		# This parser processes general markup into a sequence of events which are passed to a delegate.
-		class Parser < StringScanner
+		class Parser < Scanner
 			def initialize(buffer, delegate)
 				super(buffer)
 				
@@ -37,6 +37,11 @@ module Trenni
 				until eos?
 					start_pos = self.pos
 					
+					# Scan invisible elements:
+					scan_link
+					
+					# Scan block level elements:
+					scan_markup
 					scan_heading
 					scan_paragraph
 					scan_code
@@ -49,6 +54,37 @@ module Trenni
 			end
 			
 			protected
+			
+			MARKUP = /<[^<>]*?\/>|<(.*?)>(.*?)<\/\1>/m
+			
+			def scan_markup
+				if self.scan(MARKUP)
+					@delegate.markup(self.matched)
+				end
+			end
+			
+			def scan_spans(text)
+				text.scan
+			end
+			
+			def scan_link
+				if self.scan(/\[(.*?)\]: (.*?)$/)
+					@delegate.link(self[1], self[2])
+				end
+			end
+			
+			LIST_ITEM = /(\s*)(\d+\.|[\+\-\*])\s(.*?)$/
+			
+			def scan_list
+				items = nil
+				while self.scan(LIST_ITEM)
+					items ||= []
+					
+					items << [self[0], self[1], self[2]]
+				end
+				
+				@delegate.list(items)
+			end
 			
 			def scan_newlines
 				# Consume all newlines.
@@ -70,15 +106,11 @@ module Trenni
 					
 					text = self[2]
 					
-					# If the title has a inline code fence, e.g. "# Testing `String`"
-					# we only pass along the part in the code fence.
-					text = $1 if text =~ /`(.*?)`/
-					
 					@delegate.heading(level, text)
 				end
 			end
 			
-			PARAGRAPH_LINE = /([^\s#].*?\Z)/
+			PARAGRAPH_LINE = /([^\s#].*?(\n|\z))/
 			
 			def scan_paragraph
 				if self.scan(PARAGRAPH_LINE)
@@ -88,13 +120,16 @@ module Trenni
 						lines << self[1]
 					end
 					
-					@delegate.paragraph(lines)
+					@delegate.paragraph(lines) do
+						lines.each do |line|
+							scan_spans(line)
+						end
+					end
 				end
 			end
 			
-			CODE_LINE = /\t(.*?\n\Z)/
-			CODE_BLOCK_START = /(~~~~*)(?<meta>.*?)\Z/
-			CODE_BLOCK_END = /(~~~~*)\Z/
+			CODE_LINE = /\t(.*?(\n|\z))/
+			CODE_BLOCK = /(?<fence>````*|~~~~*)\s*(?<meta>.*?)(\n|\z)/
 			
 			def scan_code
 				if self.scan(CODE_LINE)
@@ -105,8 +140,16 @@ module Trenni
 					end
 					
 					@delegate.code(lines)
-				elsif self.scan(CODE_BLOCK_START)
+				elsif self.scan(CODE_BLOCK)
+					fence = /#{Regexp.escape(self[:fence])}$/
+					meta = self[:meta]
 					
+					while !self.scan(fence)
+						self.scan(/(.*?)$/)
+						lines << self[1]
+					end
+					
+					@delegate.code(lines, meta)
 				end
 			end
 		end

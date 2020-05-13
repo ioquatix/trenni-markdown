@@ -21,7 +21,7 @@
 module Trenni
 	module Markdown
 		# This parser delegate generates nested code output.
-		class Generator
+		class Code
 			def initialize(comment_prefix = '# ')
 				@comment_prefix = comment_prefix
 				@stack = []

@@ -20,4 +20,4 @@
 
 require_relative "markdown/version"
 require_relative "markdown/parser"
-require_relative "markdown/generator"
+require_relative "markdown/generators"

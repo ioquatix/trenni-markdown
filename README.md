@@ -20,19 +20,14 @@ The name of this gem is a bit misleading but essentially what it does is generat
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-	gem 'trenni-markdown'
-
-And then execute:
-
-	$ bundle
-
-Or install it yourself as:
-
-	$ gem install trenni-markdown
+~~~ bash
+bundler add trenni-markdown
+~~~
 
 ## Usage
+
+- foo
+- bar
 
 ### Command line
 
@@ -40,13 +35,13 @@ A command line binary is included for basic transforms (using [examples/test.md]
 
 	$ trenni-markdown generate -g RSpec examples/test.md
 	RSpec.describe String.new("Test") do
-
+		
 		# This test checks that strings report the inclusion of letters correctly.
-
+		
 		it "should contain the letter e" do
 			expect(subject).to include('e')
 		end
-
+		
 		it "shoudn't contain the letter m" do
 			expect(subject).to_not include('m')
 		end

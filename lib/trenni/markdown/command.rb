@@ -28,7 +28,7 @@ module Trenni
 		module Command
 			class Generate < Samovar::Command
 				options do
-					option "-g/--generator <name>", "The class to use for the conversion process.", default: 'Ruby'
+					option "-g/--generator <name>", "The class to use for the conversion process.", default: 'Markup'
 				end
 				
 				many :paths, "The paths to convert."
@@ -43,10 +43,7 @@ module Trenni
 						generator = generator_class.new
 						
 						Trenni::Markdown::Parser.new(buffer, generator).parse!
-						
-						puts generator.output
 					end
-
 				end
 			end
 			
